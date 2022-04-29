@@ -100,6 +100,9 @@ def PrintErr(*args, **kwd):
             w(str(a))
         w(kwd.get("end", "\n"))
 
+def ssize_macro():
+    return ('PY_SSIZE_T_CLEAN', 1)
+
 def endianness_macro():
     s = struct.pack("@I", 0x33221100)
     if s == "\x00\x11\x22\x33".encode():     # little endian
@@ -441,12 +444,13 @@ kw = {'name':"pycrypto",
             Extension("Crypto.Hash.RIPEMD160",
                       include_dirs=['src/'],
                       sources=["src/RIPEMD160.c"],
-                      define_macros=[endianness_macro()]),
+                      define_macros=[endianness_macro(), ssize_macro()]),
 
             # Block encryption algorithms
             Extension("Crypto.Cipher._AES",
                       include_dirs=['src/'],
-                      sources=["src/AES.c"]),
+                      sources=["src/AES.c"],
+                      define_macros=[ssize_macro()]),
             Extension("Crypto.Cipher._AESNI",
                       include_dirs=['src/'],
                       sources=["src/AESNI.c"]),
